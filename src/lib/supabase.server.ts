@@ -1,8 +1,16 @@
 import { createClient } from '@supabase/supabase-js';
-import { PUBLIC_SUPABASE_URL } from '$env/static/public';
-import { SUPABASE_SERVICE_ROLE_KEY } from '$env/static/private';
+import { env as pub } from '$env/dynamic/public';
+import { env as priv } from '$env/dynamic/private';
 
-// Server-only client — bypasses RLS, use only in +server.ts and +page.server.ts
-export const supabaseAdmin = createClient(PUBLIC_SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY, {
-	auth: { persistSession: false }
-});
+export function getSupabaseAdmin() {
+	return createClient(pub.PUBLIC_SUPABASE_URL, priv.SUPABASE_SERVICE_ROLE_KEY, {
+		auth: { persistSession: false }
+	});
+}
+
+// Proxy so all existing callers (supabaseAdmin.from(...) etc.) work unchanged.
+// Client is created inside each request handler where Cloudflare env vars are available.
+export const supabaseAdmin = new Proxy(
+	{} as ReturnType<typeof getSupabaseAdmin>,
+	{ get: (_, prop) => Reflect.get(getSupabaseAdmin(), prop) }
+);

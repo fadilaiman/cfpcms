@@ -1,5 +1,5 @@
-import { TOYYIBPAY_SECRET_KEY, TOYYIBPAY_BASE_URL, TOYYIBPAY_CATEGORY_CODE } from '$env/static/private';
-import { PUBLIC_APP_URL } from '$env/static/public';
+import { env as priv } from '$env/dynamic/private';
+import { env as pub } from '$env/dynamic/public';
 
 export interface CreateBillParams {
 	orderId: string;
@@ -18,15 +18,15 @@ export interface BillResult {
 
 export async function createBill(params: CreateBillParams): Promise<BillResult> {
 	const body = new URLSearchParams({
-		userSecretKey: TOYYIBPAY_SECRET_KEY,
-		categoryCode: TOYYIBPAY_CATEGORY_CODE,
+		userSecretKey: priv.TOYYIBPAY_SECRET_KEY,
+		categoryCode: priv.TOYYIBPAY_CATEGORY_CODE,
 		billName: params.orderNumber,
 		billDescription: params.description,
 		billPriceSetting: '1', // fixed price
 		billPayorInfo: '1',    // collect payer info
 		billAmount: String(params.totalCents),
-		billReturnUrl: `${PUBLIC_APP_URL}/checkout/success`,
-		billCallbackUrl: `${PUBLIC_APP_URL}/api/payment/callback`,
+		billReturnUrl: `${pub.PUBLIC_APP_URL}/checkout/success`,
+		billCallbackUrl: `${pub.PUBLIC_APP_URL}/api/payment/callback`,
 		billExternalReferenceNo: params.orderId,
 		billTo: params.customerName,
 		billEmail: params.customerEmail,
@@ -39,7 +39,7 @@ export async function createBill(params: CreateBillParams): Promise<BillResult> 
 		billChargeToCustomer: '0', // merchant absorbs fee
 	});
 
-	const res = await fetch(`${TOYYIBPAY_BASE_URL}/api/createBill`, {
+	const res = await fetch(`${priv.TOYYIBPAY_BASE_URL}/api/createBill`, {
 		method: 'POST',
 		body
 	});
@@ -57,7 +57,7 @@ export async function createBill(params: CreateBillParams): Promise<BillResult> 
 	const billCode = data[0].BillCode;
 	return {
 		billCode,
-		paymentUrl: `${TOYYIBPAY_BASE_URL}/${billCode}`
+		paymentUrl: `${priv.TOYYIBPAY_BASE_URL}/${billCode}`
 	};
 }
 
@@ -71,11 +71,11 @@ export interface Transaction {
 
 export async function getBillTransactions(billCode: string): Promise<Transaction[]> {
 	const body = new URLSearchParams({
-		userSecretKey: TOYYIBPAY_SECRET_KEY,
+		userSecretKey: priv.TOYYIBPAY_SECRET_KEY,
 		billCode
 	});
 
-	const res = await fetch(`${TOYYIBPAY_BASE_URL}/api/getBillTransactions`, {
+	const res = await fetch(`${priv.TOYYIBPAY_BASE_URL}/api/getBillTransactions`, {
 		method: 'POST',
 		body
 	});

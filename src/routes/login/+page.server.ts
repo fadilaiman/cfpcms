@@ -1,5 +1,5 @@
 import { createClient } from '@supabase/supabase-js';
-import { PUBLIC_SUPABASE_URL, PUBLIC_SUPABASE_ANON_KEY } from '$env/static/public';
+import { env as pub } from '$env/dynamic/public';
 import { fail, redirect } from '@sveltejs/kit';
 import type { Actions } from './$types';
 
@@ -13,7 +13,7 @@ export const actions: Actions = {
 			return fail(400, { error: 'Email and password are required.' });
 		}
 
-		const supabase = createClient(PUBLIC_SUPABASE_URL, PUBLIC_SUPABASE_ANON_KEY);
+		const supabase = createClient(pub.PUBLIC_SUPABASE_URL, pub.PUBLIC_SUPABASE_ANON_KEY);
 		const { data, error } = await supabase.auth.signInWithPassword({ email, password });
 
 		if (error || !data.session) {
