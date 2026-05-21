@@ -1,7 +1,0 @@
-name = "cfpcms"
-compatibility_date = "2024-01-01"
-compatibility_flags = ["nodejs_compat"]
-
-[vars]
-# Non-secret env vars go here. Secrets go in Cloudflare dashboard.
-TOYYIBPAY_BASE_URL = "https://toyyibpay.com"
