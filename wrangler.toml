@@ -1,3 +1,6 @@
 name = "cfpcms"
-main = "worker.js"
 compatibility_date = "2024-01-01"
+compatibility_flags = ["nodejs_compat"]
+
+[vars]
+TOYYIBPAY_BASE_URL = "https://dev.toyyibpay.com"
