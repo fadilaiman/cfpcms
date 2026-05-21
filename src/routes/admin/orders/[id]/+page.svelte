@@ -3,7 +3,7 @@
 	import type { PageData } from './$types';
 
 	let { data }: { data: PageData } = $props();
-	const { order } = data;
+	const order = $derived(data.order);
 
 	const statusColors: Record<string, string> = {
 		pending: 'bg-yellow-100 text-yellow-700',

@@ -3,7 +3,7 @@
 	import type { PageData, ActionData } from './$types';
 
 	let { data, form }: { data: PageData; form: ActionData } = $props();
-	let productType = $state(data.product.type);
+	let productType = $state(data.product.type as string);
 	let loading = $state(false);
 </script>
 
